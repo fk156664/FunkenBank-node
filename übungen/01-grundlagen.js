@@ -103,3 +103,23 @@ for (let i = 0; i < laufzeit; i++) {
 }
 
 
+console.log('Aufgabe 9');
+console.log('Wenn der Artikel Lebensmittel ist, dann ist die MwSt 7%, ansonsten 19%.');
+console.log('In Excel würde das so aussehen: =wenn(A1=lebensmittel;7;19)');
+
+let artikel = 'Lebensmittel';
+let mwstSatz = (artikel === "Lebensmittel") ? 7 : 19;
+
+// Der Ausdruck ist vergleichbar mit Excel. In den runden Klammern findet die prüfung auf "wahr" oder "falsch" statt.
+// Wenn article === "Lebensmittel" wahr ist, wird der Wert vor dem Doppelpunkt zurückgegeben. Ansonsten der Wert hinter dem Doppelpunkt.
+// Anders als in Excel ist das einfache Gelichheitszeichen für eine Zuweisung reserviert. Für einen Vergleich muss in 
+// Java.script mit 2 oder 3 Gleichheitszeichen gearbeitet werden.
+
+console.log('Der Mehrwertsteuersatz für den Artikel ' + artikel + 'beträgt:' + mwstSatz +'%.');
+
+
+console.log('Aufgabe 10');
+console.log(' hausaufgabe eigene Aufgabe mit Wenn-Funktion');
+
+let farbe = 'rot';
+let outcome = ( farbe === "rot") ? r : f;
