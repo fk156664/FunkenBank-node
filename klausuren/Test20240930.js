@@ -133,7 +133,7 @@ console.log(" Die Noten des Schülers " + zeugnis1.Nachname + zeugnis1.Vorname +
 // let x = Math.min(5, 10); --> Es werden 5 und 10 verglichen. x nimmt jetzt den Wert 5 an, da 5 der niedrigste der kommaseparierten Werte ist.
 
 
-
+let lisa= 3
 
 
 
@@ -172,6 +172,15 @@ if (produkt="Zeitung") {
 } else {
     console.log(" Die MwSt beträgt 19%")
 }
+
+
+
+if ()
+
+
+
+
+
 
 // 3c)
 // Berechnen Sie die MwSt in einer sprechenden Variablen. Geben Sie einen Anwortsatz auf der Konsole aus.
