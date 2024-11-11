@@ -11,12 +11,19 @@ const express = require('express');
 //Die Anweisungen werden von oben nach unten abgearbeitet. 
 //Der Wert 3000 wird von rechts nach links zugewiesen an die Konstante namens PORT. 
 //Das einfache Gkleichheitszeichen lässt sich mit "... wird zugewiesen an..."
-const PORT = 3000;
+const PORT = 4000;
 //Der Wert '0.0.0.0' wird zugewiesen an eine Konstante namen HOST.
 const HOST = '0.0.0.0';
 
 // App
+
 const app = express();
+
+
+app.use(express.static('public'))
+
+
+
 app.get('/', (req, res) => {
 
 	//res ist die Antwort des Serves an den Browser.
@@ -27,6 +34,14 @@ app.get('/', (req, res) => {
 	//Das res-Objekt kann nochmehr, als nur eine Zeichenkette an den Browser zu senden.
 	//Das res-Objekt kann mit der Funktion render() eine HTML-Datei an den Browser senden.
 	res.render('index.ejs',{});
+});
+
+//Wenn im Browser die Adresse.../agb aufgerufen wird, wird der Server aufgefordert, 
+//die angefragte Seite an den Browser zurückzugeben.
+//Der Server arbeitet dazu die Funktion app.get('agb)...ab.
+
+app.get('agb', (req, res) => {
+    res.render('agb.ejs',{});
 });
 
 // Mit listen() wird der Server angewiesen, auf den angegebenen HOST und PORT
@@ -42,4 +57,4 @@ console.log(`Running on http://${HOST}:${PORT}`);
 
 //Mit der Funktion require, wird die Datei in den runden Klammern eingelesen.
 //require('./übungen/04-funktionen.js');
-require('./übungen/04-funktionen.js');
+//require('./übungen/04-funktionen.js');
