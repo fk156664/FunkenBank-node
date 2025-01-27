@@ -2,16 +2,34 @@ class Kunde{
 	constructor(){
 		this.Nachname
 		this.Vorname
-		this.Benutzername
-		this.Passwort
+		this.benutzername
+		this.Kennwort
 	}
 }
 
-let kunde= new Kunde();
-kunde.Nachname = "Müller"
-kunde.Vorname = "Sarah"
-kunde.Benutzername ="sm"
-kunde.Passwort = "123"
+let kunde = new Kunde();
+kunde.Nachname = "Kiff"
+kunde.Vorname = "Pit"
+kunde.Benutzername = "pk"
+kunde.Kennwort = "123"
+
+class Kundenberater{
+	constructor(){
+		this.Nachname
+		this.Vorname
+		this.Telefonnummer
+		this.Mail
+		this.Bild
+	}
+}
+
+let kundenberater = new Kundenberater();
+kundenberater.Nachname = "Pass"
+kundenberater.Vorname = "Hildegard"
+kundenberater.Telefonnummer = "012345 67890"
+kundenberater.Mail = "h.pass@borken-bank.de"
+
+kundenberater.Bild = "pass.jpg"
 
 'use strict';
 
@@ -23,6 +41,7 @@ const express = require('express');
 // Der Body-Parser wird im Terminal mit dem Befehl 'npm install -g body-parser' installiert.
 
 const bodyParser = require('body-parser');
+const cookieParser = require('cookie-parser');
 
 // Die Anweisungen werden von oben nach unten abgearbeitet. Der Wert 3000 wird von rechts nach links 
 // zugewiesen an die Konstante namens PORT. Das einfache Gleichheitszeichen lässt sich also übersetzen
@@ -45,6 +64,7 @@ app.set('view engine', 'ejs')
 
 app.use(bodyParser.urlencoded({extended: true}))
 
+app.use(cookieParser("geheim"))
 app.get('/', (req, res) => {
 
 	// res ist die Antwort des Servers an den Browser.
@@ -84,8 +104,36 @@ app.get('/postfach', (req, res) => {
 	res.render('postfach.ejs',{});
 });
 
+// Sobald die Seite "Kredit beantragen" aufgerufen wird, wird die app.get abgearbeitet.
 app.get('/kreditBeantragen', (req, res) => {
-	res.render('kreditBeantragen.ejs',{});
+	res.render('kreditBeantragen.ejs',{
+		Laufzeit: "",
+		Zinssatz: "",		
+		Betrag: "",
+		Meldung: ""
+	});
+});
+
+
+// Sobald der "Kredit berechnen"-Button gedrückt wird, wird die app.post abgearbeitet.
+app.post('/kreditBeantragen', (req, res) => {
+
+	// Der Server nimmt die Werte aus dem Browserformular entgegen:
+	let zinsbetrag = req.body.Betrag;
+	let laufzeit = req.body.Laufzeit;
+	let zinssatz = req.body.Zinssatz;
+
+	// Der Rückzahlungsbetrag wird berechnet
+	let kredit = zinsbetrag * Math.pow(1+zinssatz/100,laufzeit);
+	console.log("Rückzahlungsbetrag: " + kredit + " €.")
+
+	// Die Funktion render() gibt die Werte an den Browser
+	res.render('kreditBeantragen.ejs',{
+		Laufzeit: laufzeit,
+		Zinssatz: zinssatz,		
+		Betrag: zinsbetrag,
+		Meldung: "Rückzahlungsbetrag: " + kredit + " €."
+	});
 });
 
 app.get('/ueberweisungAusfuehren', (req, res) => {
@@ -143,33 +191,31 @@ app.get('/login', (req, res) => {
 });
 
 app.post('/login', (req, res) => {
-
 	
-	let benutzername = req.body.IDKunde;
-	console.log("login: Benutzername" + benutzername)
+	let benutzername = req.body.IdKunde;
+	console.log("login: Benutzername: " + benutzername)
 
-	let kennwort= req.body.Passwort;
-	console.log("Passwort:" + kennwort)
+	let kennwort = req.body.Kennwort;
+	console.log("login: Kennwort: " + kennwort)
 
-	//Es muss geprüft werden, ob der Kunde mit diesem Benutzernamen das richtige Kennwort eingegeben hat.
+	// Es muss geprüft werden, ob der Kunde mit diesem Benutzernamen das richtige
+	// Kennwort eingeben hat.
 
 	let meldung = "";
 
-	if(kunde.Benutzername == benutzername && kunde.Passwort == Passwort){
-        console.log(" korekkte Daten eingegeben")
-        meldung ="Die Anmeldedaten wurden korrekt eingegeben"
+	if(kunde.Benutzername == benutzername && kunde.Kennwort == kennwort){
+		console.log("Die Zugangsdaten wurden korrekt eingegeben.")
+		meldung = "Die Zugangsdaten wurden korrekt eingegeben"
 	}else{
-		console.log("falsche Anmeldedaten!")
-		meldung ="Die Anmeldedaten sind falsch!"
+		console.log("Die Zugangsdaten wurden NICHT korrekt eingegeben.")
+		meldung = "Die Zugangsdaten wurden NICHT korrekt eingegeben"
 	}
 
-
-
 	res.render('login.ejs',{
-	
 		Meldung: meldung
 	});
 });
+
 
 
 
@@ -189,3 +235,9 @@ console.log(`Running on http://${HOST}:${PORT}`);
 //require('./uebungen/03-objekte.js');
 //require('./klausuren/klausur20240930.js');
 //require('./uebungen/04-funktionen.js');
+
+
+
+
+
+0
