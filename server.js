@@ -4,6 +4,7 @@
 //  weil man nicht immer alle seine daten erneut angeben muss
 //bei besuch der website schickt diese cookie dateien an den browser. beim nächsten besuch der website werden dateien wieder zurück an den browser gesendet
 
+
 // Klassendefinition des Kunden
 class Kunde{
 	constructor(){
@@ -60,10 +61,53 @@ const express = require('express');
 
 const bodyParser = require('body-parser');
 
+// Cookies sind kleine Textdateien, die beim Besuch von Webseiten auf dem lokalen Rechner
+// von Nutzern gespeichert werden. Beim erneuten Seitenbesuch können sie direkt an den Server 
+// gesendet werden. 
+// Cookies können notwendig sein oder z.B. der Werbung dienen.
+// Cookies können z.B. ganz konkret einen Warenkorb nach Tagen wieder anzeigen, obwohl 
+// der Nutzer sich bei dem Händler noch nicht registriert hat.
 // Der cookieparser ist für die Verarbeitung der cookies unserer App zuständig.
 // Mit dem cookieparser können wir cookies setzen und auslesen und löschen.
+// Man kann Cookies am Browser anzeigen, indem man F12 drückt.
+// Weil man Cookies im Browser sehr einfach auslesen kann, kann man Cookies signieren.
+
+
+// In der Banking-App sollen Cookies wie folgt eingesetzt werden:
+//    Wenn sich der Kunde an der App anmeldet, wird ein Cookie in seinem Browser gespeichert.
+//    Der Cookie enthält seine Kundendaten.
+//    Immer, wenn der Kunde nach der Anmeldung in der App einen Button drückt, werden
+//    seine Kundendaten vom Browser an den Server übergeben. Der Server weiß dadurch, 
+//    mit welchem Kunden er es zu tun hat. So ermöglichen wir, dass mehrere Kunden gleichzeitig
+//    mit dem Server interagieren können.
+
+
 
 const cookieParser = require('cookie-parser')
+const { validate } = require('email-validator')
+
+// Die Funktion validate wird auf das validator_Objekt aufgerufe.
+// Als Parameter wird eine Mail_Adresse an die Funktion übergeben
+// Der Rückgabewert der Funktion ist true oder false.
+
+validator.validate("test@email.com"); // true
+
+if(validate("stefan.baeumer@berufskolleg-borken.de")){
+	console.log("Gültige Email.")
+}else{
+	console.log("Ungültige Email.")
+}
+
+
+
+
+
+
+
+//Die bibliothek email-validator ptüft eimals auf syntaktische Korrektheit.
+// die Anforderungen an gültige mails sind exakt festgelegt
+
+
 
 // Die Anweisungen werden von oben nach unten abgearbeitet. Der Wert 3000 wird von rechts nach links 
 // zugewiesen an die Konstante namens PORT. Das einfache Gleichheitszeichen lässt sich also übersetzen
@@ -77,7 +121,6 @@ const HOST = '0.0.0.0';
 // App
 
 const app = express();
-
 
 // Es wird der App bekanntgegeben, wo die styles zu finden sind.
 app.use(express.static('public'))
@@ -93,9 +136,11 @@ app.use(bodyParser.urlencoded({extended: true}))
 
 app.use(cookieParser())
 
+
 // Geheimer Schlüssel für signierte Cookies
 const secretKey = 'mein_geheimer_schluessel';
-// app.use(cookieParser(secretKey));
+//app.use(cookieParser(secretKey));
+
 
 
 // Die app.get wird abgearbeitet, sobald die Index-Seite angesurft wird.
@@ -365,15 +410,15 @@ app.post('/login', (req, res) => {
 		kunde.IstEingeloggt = true;
 		console.log("kunde.IstEingeloggt: " + kunde.IstEingeloggt)
 
-		// Wenn der Kunde seine Credentials korrekt eingegeben hat, wird ein Cookie gesetzte.
-		// Um das ganze Kundenobjekt im Cookie zu speichern können, wird das
-		// Kundenobjekt in einer Zeichenkette umgewandelt. Dazu wird die stringify Funktion
-		//auf das JSON-Objekt aufgerufen.
-		res.cookie('istAngemeldetAls', JSON.stringify(kunde), { maxAge: 900000, httpOnly: true, signed: false});
+
+		// Wenn der Kunde seine Credentials korrekt eingegeben hat,
+		// wird ein cookie wird gesetzt.
+		// Um das ganze Kundenobjekt im Cookie speichern zu können, wird das 
+		// Kundenobjekt in eine Zeichenkette umgewandelt. Dazu wird die stringify-Funktion
+		// auf das JSON-Objekt aufgerufen.
+		res.cookie('istAngemeldetAls', JSON.stringify(kunde) , { maxAge: 900000, httpOnly: true, signed: false });
 		console.log("Das Kundenobjekt im Cookie gespeichert.")
-
-
-		res.clearCookie('name')
+		
 
 
 
