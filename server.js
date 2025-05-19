@@ -5,6 +5,62 @@
 //bei besuch der website schickt diese cookie dateien an den browser. beim nächsten besuch der website werden dateien wieder zurück an den browser gesendet
 
 
+const IBANValidator = require('iban-validator-js')
+
+//Importiert das sqlite3-Module im ausführlichen Modus
+const sqlite3 = require (sqlite3).verbose();
+
+// Neue Datenbankverbindung herstellen (Datei wird automatisch erstellt, falls sie nicht existiert)
+const db = new sqlite3.Database('./funkenbank.db', (err) => {
+    if (err) {
+        console.error('Fehler beim Öffnen der Datenbank:', err.message);
+    } else {
+        console.log('Verbindung zur SQLite-Datenbank erfolgreich hergestellt.');
+        // Tabelle "Kunde" anlegen, falls sie noch nicht existiert
+        db.run(`CREATE TABLE IF NOT EXISTS Kunde (
+            KundenNr INTEGER PRIMARY KEY AUTOINCREMENT,
+            Vorname TEXT,
+            Nachname TEXT,
+            Wohnort TEXT,
+            PLZ TEXT,
+            Strasse TEXT,
+            HausNr TEXT,
+            Kennwort TEXT,
+            Benutzername TEXT
+        )`, (err) => {
+            if (err) {
+                console.error('Fehler beim Erstellen der Tabelle:', err.message);
+            } else {
+                console.log('Tabelle "Kunde" ist bereit.');
+                // Beispielkunden einfügen, falls noch keiner existiert
+                db.get('SELECT COUNT(*) as count FROM Kunde', (err, row) => {
+                    if (err) {
+                        console.error('Fehler beim Überprüfen der Tabelle:', err.message);
+                    } else if (row.count === 0) {
+                        db.run(`INSERT INTO Kunde 
+                            (Vorname, Nachname, Wohnort, PLZ, Strasse, HausNr, Kennwort, Benutzername)
+                            VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+                            ['Max', 'Mustermann', 'Musterstadt', '12345', 'Musterstraße', '1', 'passwort123', 'maxmuster'],
+                            (err) => {
+                                if (err) {
+                                    console.error('Fehler beim Einfügen des Beispielkunden:', err.message);
+                                } else {
+                                    console.log('Beispielkunde wurde angelegt.');
+                                }
+                            }
+                        );
+                    }
+                });
+            }
+        });
+    }
+});
+
+
+
+
+
+
 // Klassendefinition des Kunden
 class Kunde{
 	constructor(){
